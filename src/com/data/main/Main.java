@@ -1,7 +1,7 @@
 package com.data.main;
 
-import com.mohom.extract.ExtractFiles;
-import com.mohom.misc.Utils;
+import com.data.extract.ExtractFiles;
+import com.data.misc.Utils;
 
 import java.util.Scanner;
 
