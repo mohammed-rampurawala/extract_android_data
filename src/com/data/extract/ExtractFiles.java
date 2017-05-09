@@ -28,9 +28,13 @@ public class ExtractFiles {
         try {
             Runtime.getRuntime().exec("adb start-server");
             this.mDirectoryOps.createExtractionDestDir(packageName);
+            this.mBasePath = ("/sdcard/extract_files/" + packageName);
+
+            deleteProjectDirFromSD();
+
             createMainDirList(packageName);
             createSubDirectory(packageName);
-            createProjectDirInSd(packageName);
+            createProjectDirInSd();
             createFolderPaths();
             extractFiles(packageName);
             pullFiles(packageName);
@@ -39,6 +43,14 @@ public class ExtractFiles {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void deleteProjectDirFromSD() throws IOException {
+        ArrayList<String> listOfCommands = new ArrayList<String>();
+        listOfCommands.add("adb");
+        listOfCommands.add("shell");
+        listOfCommands.add("rm -r" + this.mBasePath);
+        ExecuteCommands.getInstance().executeCommands(listOfCommands);
     }
 
     private void pullFiles(String packageName)
@@ -124,12 +136,11 @@ public class ExtractFiles {
         }
     }
 
-    private void createProjectDirInSd(String packageName)
+    private void createProjectDirInSd()
             throws IOException {
         ArrayList<String> listOfCommands = new ArrayList<String>();
         listOfCommands.add("adb");
         listOfCommands.add("shell");
-        this.mBasePath = ("/sdcard/" + packageName);
         listOfCommands.add("mkdir " + this.mBasePath);
         ExecuteCommands.getInstance().executeCommands(listOfCommands);
     }
