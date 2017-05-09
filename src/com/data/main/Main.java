@@ -11,7 +11,7 @@ public class Main {
         Utils.checkDeviceConnected();
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Thanks for using... \n By Mohammed Rampurawala");
+        System.out.println("Thanks for using... \n");
         System.out.println("Please enter package name");
         String packageName = scanner.nextLine();
         if (!Utils.isPackageValid(packageName)) {
