@@ -157,6 +157,12 @@ public class ExtractFiles {
                 }
                 list.add("/" + line);
             }
+            try {
+                reader.close();
+                inputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -177,6 +183,12 @@ public class ExtractFiles {
             if (line.length() > 1) {
                 this.mFileMap.put(line, new ArrayList<String>());
             }
+        }
+        try {
+            reader.close();
+            executeCommands.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
