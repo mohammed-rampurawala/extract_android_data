@@ -1,6 +1,7 @@
 package com.data.extract;
 
 import com.data.misc.ExecuteCommands;
+import com.sun.javafx.util.Utils;
 
 import java.io.*;
 import java.util.*;
@@ -13,6 +14,13 @@ public class ExtractFiles {
     private HashMap<String, List<String>> mFileMap = new HashMap<String, List<String>>();
     private String mBasePath;
     private DirectoryOps mDirectoryOps = DirectoryOps.getInstance();
+    private ArrayList<String> macCommands = new ArrayList<>();
+
+    {
+        macCommands.add("/bin/bash");
+        macCommands.add("-l");
+        macCommands.add("-c");
+    }
 
     public void startExtraction(String packageName) {
 
@@ -37,6 +45,8 @@ public class ExtractFiles {
             throws IOException, InterruptedException {
         String mOutputPath = this.mDirectoryOps.getOutputPath();
         Set<String> fileMapKeySet = this.mFileMap.keySet();
+        boolean isMac = Utils.isMac();
+        ArrayList<String> listOfCommands = new ArrayList<>();
 
         for (String fileMapKey : fileMapKeySet) {
             File stringFilePath = new File(mOutputPath + File.separator + fileMapKey);
@@ -57,10 +67,15 @@ public class ExtractFiles {
                 System.out.println("Output:->" + outputFile);
                 System.out
                         .println("-----------------------------------------------------");
+                //Delay because sometimes it takes time to create directory.
                 Thread.sleep(1000L);
-                Runtime.getRuntime().exec(
-                        "adb pull " + inputFile + " " +
-                                outputFile);
+                if (isMac) {
+                    listOfCommands.addAll(macCommands);
+                }
+                listOfCommands.add("adb pull " + inputFile + " " + outputFile);
+                ProcessBuilder builder = new ProcessBuilder(listOfCommands);
+                builder.start();
+                listOfCommands.clear();
             }
 
         }
@@ -93,7 +108,7 @@ public class ExtractFiles {
                                     "adb",
                                     "shell",
                                     "cp /data/data/" + packageName + "/" + fileMapKey +
-                                             fileName + " " + mBasePath +
+                                            fileName + " " + mBasePath +
                                             "/" + fileMapKey},
                             {"adb", "shell",
                                     "run-as " + packageName,
