@@ -40,11 +40,12 @@ public class Utils {
                     attachedDevices.add(line);
                 }
             }
+            reader.close();
             if (attachedDevices.size() < 2) {
                 System.out.println("No devices attached");
                 System.exit(1);
             }
-            reader.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
