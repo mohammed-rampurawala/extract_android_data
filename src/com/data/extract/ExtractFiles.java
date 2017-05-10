@@ -28,7 +28,7 @@ public class ExtractFiles {
         try {
             Runtime.getRuntime().exec("adb start-server");
             this.mDirectoryOps.createExtractionDestDir(packageName);
-            this.mBasePath = ("/sdcard/extract_files/" + packageName);
+            this.mBasePath = ("/sdcard/" + packageName);
 
             deleteProjectDirFromSD();
 
