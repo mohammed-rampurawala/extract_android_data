@@ -60,6 +60,7 @@ public class ExtractFiles {
         boolean isMac = Utils.isMac();
         ArrayList<String> listOfCommands = new ArrayList<>();
 
+        ProcessBuilder builder;
         for (String fileMapKey : fileMapKeySet) {
             File stringFilePath = new File(mOutputPath + File.separator + fileMapKey);
             if (!stringFilePath.exists()) {
@@ -85,7 +86,7 @@ public class ExtractFiles {
                     listOfCommands.addAll(macCommands);
                 }
                 listOfCommands.add("adb pull " + inputFile + " " + outputFile);
-                ProcessBuilder builder = new ProcessBuilder(listOfCommands);
+                builder = new ProcessBuilder(listOfCommands);
                 builder.start();
                 listOfCommands.clear();
             }
