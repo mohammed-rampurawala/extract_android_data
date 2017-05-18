@@ -1,4 +1,19 @@
-Extract files from android data
+# Extract My Android app data
+
+Extract android data files from android data folder.
+It extracts all the files inside data folder of android application within package folder.
+You dont need android device to be rooted but it only works for debuggable application and not with release builds.
+Tested with Sony, Nexus and sometimes face problem with Samsung Manufactured android devices.
+
+## How it works:
+1. It asks you to enter package name.
+2. It will identify all files in the android package name folder and create the directory in device's sdcard.
+3. Files will be extracted into the android device sdcard. For Example: "/sdcard/com.example.myapp"
+4. It will create a directory where .bat/.sh file is executed with same name as package entered and will pull all files into that respective directory.
+
+#### Note
+Everytime files are extracted sdcard files will be renewed but on Desktop/Finder new directory will be created.
+
 ### License
 ```
    Copyright (C) 2016 Mohammed Rampurawala
