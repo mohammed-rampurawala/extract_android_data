@@ -84,7 +84,10 @@ public class ExtractFiles {
                 if (isMac) {
                     listOfCommands.addAll(macCommands);
                 }
-                listOfCommands.add("adb pull " + inputFile + " " + outputFile);
+                listOfCommands.add("adb");
+                listOfCommands.add("pull");
+                listOfCommands.add(inputFile);
+                listOfCommands.add(outputFile);
                 ProcessBuilder builder = new ProcessBuilder(listOfCommands);
                 builder.start();
                 listOfCommands.clear();
