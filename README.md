@@ -14,6 +14,8 @@ Tested with Sony, Nexus and sometimes face problem with Samsung Manufactured and
 #### Note
 Everytime files are extracted it will be stored in sdcard and older files will be renewed but on Desktop/Finder new directory will be created.
 
+Download executable file from [Android Extract Data](https://goo.gl/eqTVfm)
+
 ### License
 ```
    Copyright (C) 2016 Mohammed Rampurawala
