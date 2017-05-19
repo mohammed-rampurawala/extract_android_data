@@ -12,7 +12,7 @@ Tested with Sony, Nexus and sometimes face problem with Samsung Manufactured and
 4. It will create a directory where .bat/.sh file is executed with same name as package entered and will pull all files into that respective directory.
 
 #### Note
-Everytime files are extracted sdcard files will be renewed but on Desktop/Finder new directory will be created.
+Everytime files are extracted it will be stored in sdcard and older files will be renewed but on Desktop/Finder new directory will be created.
 
 ### License
 ```
