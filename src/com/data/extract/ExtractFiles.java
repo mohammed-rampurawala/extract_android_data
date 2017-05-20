@@ -1,34 +1,35 @@
 package com.data.extract;
 
 import com.data.misc.ExecuteCommands;
-import com.sun.javafx.util.Utils;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by mohammed.rampurawala on 5/20/2016.
  */
 public class ExtractFiles {
 
+    private Commands commands;
     private HashMap<String, List<String>> mFileMap = new HashMap<String, List<String>>();
-    private String mBasePath;
     private DirectoryOps mDirectoryOps = DirectoryOps.getInstance();
-    private ArrayList<String> macCommands = new ArrayList<>();
 
-    {
-        macCommands.add("/bin/bash");
-        macCommands.add("-l");
-        macCommands.add("-c");
+
+    public ExtractFiles() {
+        commands = new Commands();
     }
+
 
     public void startExtraction(String packageName) {
 
 
         try {
-            Runtime.getRuntime().exec("adb start-server");
+            Runtime.getRuntime().exec(commands.getStartAdbServerCommand());
             this.mDirectoryOps.createExtractionDestDir(packageName);
-            this.mBasePath = ("/sdcard/" + packageName);
+
 
             deleteProjectDirFromSD();
 
@@ -37,7 +38,7 @@ public class ExtractFiles {
             createProjectDirInSd();
             createFolderPaths();
             extractFiles(packageName);
-            pullFiles(packageName);
+            pullFiles();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -46,21 +47,14 @@ public class ExtractFiles {
     }
 
     private void deleteProjectDirFromSD() throws IOException {
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
-        listOfCommands.add("rm -r" + this.mBasePath);
-        ExecuteCommands.getInstance().executeCommands(listOfCommands);
+        ExecuteCommands.getInstance().executeCommands(commands.getDeleteDirectoryCommand());
     }
 
-    private void pullFiles(String packageName)
+    private void pullFiles()
             throws IOException, InterruptedException {
         String mOutputPath = this.mDirectoryOps.getOutputPath();
         Set<String> fileMapKeySet = this.mFileMap.keySet();
-        boolean isMac = Utils.isMac();
-        ArrayList<String> listOfCommands = new ArrayList<>();
 
-        ProcessBuilder builder;
         for (String fileMapKey : fileMapKeySet) {
             File stringFilePath = new File(mOutputPath + File.separator + fileMapKey);
             if (!stringFilePath.exists()) {
@@ -73,25 +67,12 @@ public class ExtractFiles {
             int fileMapListSize = list.size();
             for (int fileMapListIndex = 0; fileMapListIndex < fileMapListSize; fileMapListIndex++) {
                 String fileName = list.get(fileMapListIndex);
-                String inputFile = this.mBasePath + "/" + fileMapKey + fileName;
-                String outputFile = "\"" + mOutputPath + File.separator + fileMapKey +
-                        "\"";
-                System.out.println("Input:->" + inputFile);
-                System.out.println("Output:->" + outputFile);
-                System.out
-                        .println("-----------------------------------------------------");
+
                 //Delay because sometimes it takes time to create directory.
                 Thread.sleep(1000L);
-                if (isMac) {
-                    listOfCommands.addAll(macCommands);
-                }
-                listOfCommands.add("adb");
-                listOfCommands.add("pull");
-                listOfCommands.add(inputFile);
-                listOfCommands.add(outputFile);
-                builder = new ProcessBuilder(listOfCommands);
-                builder.start();
-                listOfCommands.clear();
+
+                ExecuteCommands.getInstance().executeCommands(commands.getPullFileCommand(fileMapKey, fileName, mOutputPath));
+
             }
 
         }
@@ -100,12 +81,7 @@ public class ExtractFiles {
     private void createFolderPaths()
             throws IOException, InterruptedException {
         for (String folderName : this.mFileMap.keySet()) {
-            System.out.println(this.mBasePath + "/" + folderName);
-            ArrayList<String> listOfCommands = new ArrayList<String>();
-            listOfCommands.add("adb");
-            listOfCommands.add("shell");
-            listOfCommands.add("mkdir " + this.mBasePath + "/" + folderName);
-            ExecuteCommands.getInstance().executeCommands(listOfCommands);
+            ExecuteCommands.getInstance().executeCommands(commands.createDirInSdcard(folderName));
         }
     }
 
@@ -116,19 +92,7 @@ public class ExtractFiles {
             List<String> fileList = (List<String>) this.mFileMap.get(fileMapKey);
             for (String fileName : fileList) {
                 if (!fileName.contains("fabric")) {
-                    String[][] commandArray = {
-                            {"adb", "shell",
-                                    "run-as " + packageName,
-                                    "chmod 666 " + fileMapKey + fileName},
-                            {
-                                    "adb",
-                                    "shell",
-                                    "cp /data/data/" + packageName + "/" + fileMapKey +
-                                            fileName + " " + mBasePath +
-                                            "/" + fileMapKey},
-                            {"adb", "shell",
-                                    "run-as " + packageName,
-                                    "chmod 600 " + fileMapKey + fileName}};
+                    String[][] commandArray = commands.getExtractionCommands(packageName, fileMapKey, fileName);
                     int j = (commandArray).length;
                     for (int i = 0; i < j; i++) {
                         String[] extractionCommands = commandArray[i];
@@ -142,11 +106,7 @@ public class ExtractFiles {
 
     private void createProjectDirInSd()
             throws IOException {
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
-        listOfCommands.add("mkdir " + this.mBasePath);
-        ExecuteCommands.getInstance().executeCommands(listOfCommands);
+        ExecuteCommands.getInstance().executeCommands(commands.getCreatePackDirInSdcard());
     }
 
     private void createSubDirectory(String packageName)
@@ -154,14 +114,8 @@ public class ExtractFiles {
         Set<String> keySet = this.mFileMap.keySet();
         String line;
         for (String key : keySet) {
-
-            ArrayList<String> listOfCommands = new ArrayList<String>();
-            listOfCommands.add("adb");
-            listOfCommands.add("shell");
-            listOfCommands.add("run-as " + packageName);
-            listOfCommands.add("ls " + key);
             InputStream inputStream = ExecuteCommands.getInstance()
-                    .executeCommands(listOfCommands);
+                    .executeCommands(commands.getListOfFilesForPackage(packageName, key));
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             List<String> list = (List<String>) this.mFileMap.get(key);
@@ -183,14 +137,8 @@ public class ExtractFiles {
 
     private void createMainDirList(String packageName)
             throws IOException {
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
-        listOfCommands.add("run-as " + packageName);
-        listOfCommands.add("ls");
-
         InputStream executeCommands = ExecuteCommands.getInstance()
-                .executeCommands(listOfCommands);
+                .executeCommands(commands.getMainDirPackage(packageName));
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 executeCommands));
         String line;
