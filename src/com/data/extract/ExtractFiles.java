@@ -27,6 +27,7 @@ public class ExtractFiles {
 
 
         try {
+            commands.setPackageName(packageName);
             Runtime.getRuntime().exec(commands.getStartAdbServerCommand());
             this.mDirectoryOps.createExtractionDestDir(packageName);
 
