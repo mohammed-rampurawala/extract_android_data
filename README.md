@@ -11,7 +11,7 @@ Tested with Sony, Nexus and sometimes face problem with Samsung Manufactured and
 3. Files will be extracted into the android device sdcard. For Example: "/sdcard/com.example.myapp"
 4. It will create a directory where .bat/.sh file is executed with same name as package entered and will pull all files into that respective directory.
 
-##Update:
+## Update:
 If you are having a rooted device then you can access any package data.
 Code has been updated, need to update the JAR in the download link.
 
