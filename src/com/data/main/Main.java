@@ -20,6 +20,8 @@ public class Main {
 
         boolean isDeviceRooted = Utils.checkIfDeviceIsRooted();
         commands = isDeviceRooted ? new RootCommands() : new NonRootCommands();
+        Utils.listPackages(commands);
+
 
         System.out.println("Please enter package name");
         String packageName = scanner.nextLine();

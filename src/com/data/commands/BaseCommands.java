@@ -20,7 +20,6 @@ public abstract class BaseCommands {
 
     protected String basePath = "/sdcard/";
 
-
     {
         //Add Mac NonRootCommands
         macCommands.add("/bin/bash");
@@ -86,7 +85,10 @@ public abstract class BaseCommands {
 
     public abstract String[][] getCommandToFetchDataToSdCard(String packageName, String fileMapKey, String fileName);
 
-    public abstract List<String> getListOfFilesForPackage(String packageName, String key, boolean isRooted);
+    public abstract List<String> getListOfFilesForPackage(String packageName, String key);
 
-    public abstract List<String> getMainDirPackage(String packageName, boolean isRooted);
+    public abstract List<String> getMainDirPackage(String packageName);
+
+    public abstract List<String> getListOfPackagesInDevice();
+
 }

@@ -1,5 +1,7 @@
 package com.data.misc;
 
+import com.data.commands.BaseCommands;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,9 @@ import java.util.List;
 
 public class Utils {
     public static boolean isPackageValid(String packageName) {
+        if (packageName.isEmpty()) {
+            return false;
+        }
         String[] commands = {"adb",
                 "shell", "pm", "list", "packages", packageName};
         try {
@@ -96,5 +101,19 @@ public class Utils {
         listOfCOmmands.add("shell");
         listOfCOmmands.add("cd root");
         return listOfCOmmands;
+    }
+
+    public static void listPackages(BaseCommands commands) {
+        try {
+            List<String> listOfPackagesInDevice = commands.getListOfPackagesInDevice();
+            if (listOfPackagesInDevice.size() > 0) {
+                InputStream inputStream = ExecuteCommands.getInstance().executeCommands(listOfPackagesInDevice);
+                String input = Utils.getDataFromStream(inputStream);
+                input = input.replaceAll("package:", " | ").replaceAll("\n", "");
+                System.out.println(input);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.data.commands;
 
+import com.data.misc.ExecuteCommands;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,18 +38,23 @@ public class NonRootCommands extends BaseCommands {
     }
 
     @Override
-    public List<String> getListOfFilesForPackage(String packageName, String key, boolean isRooted) {
-        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
+    public List<String> getListOfFilesForPackage(String packageName, String key) {
+        ArrayList<String> listOfCommands = new ArrayList<>(adbShell);
         listOfCommands.add("run-as " + packageName);
         listOfCommands.add("ls " + key);
         return listOfCommands;
     }
 
     @Override
-    public List<String> getMainDirPackage(String packageName, boolean isRooted) {
-        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
+    public List<String> getMainDirPackage(String packageName) {
+        ArrayList<String> listOfCommands = new ArrayList<>(adbShell);
         listOfCommands.add("run-as " + packageName);
         listOfCommands.add("ls");
         return listOfCommands;
+    }
+
+    @Override
+    public List<String> getListOfPackagesInDevice() {
+        return Collections.emptyList();
     }
 }

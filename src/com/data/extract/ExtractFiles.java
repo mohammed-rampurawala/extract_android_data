@@ -129,7 +129,7 @@ public class ExtractFiles {
         String line;
         for (String key : keySet) {
             InputStream inputStream = ExecuteCommands.getInstance()
-                    .executeCommands(commands.getListOfFilesForPackage(packageName, key,isDeviceRooted));
+                    .executeCommands(commands.getListOfFilesForPackage(packageName, key));
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             List<String> list = this.mFileMap.get(key);
@@ -152,7 +152,7 @@ public class ExtractFiles {
     private void createMainDirList(String packageName)
             throws IOException {
         InputStream executeCommands = ExecuteCommands.getInstance()
-                .executeCommands(commands.getMainDirPackage(packageName, isDeviceRooted));
+                .executeCommands(commands.getMainDirPackage(packageName));
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 executeCommands));
         String line;

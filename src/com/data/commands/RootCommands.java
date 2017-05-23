@@ -25,16 +25,23 @@ public class RootCommands extends BaseCommands {
 
 
     @Override
-    public List<String> getListOfFilesForPackage(String packageName, String key, boolean isRooted) {
+    public List<String> getListOfFilesForPackage(String packageName, String key) {
         ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
         listOfCommands.add("ls data/data/" + packageName + "/" + key);
         return listOfCommands;
     }
 
     @Override
-    public List<String> getMainDirPackage(String packageName, boolean isRooted) {
+    public List<String> getMainDirPackage(String packageName) {
         ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
         listOfCommands.add("ls data/data/" + packageName);
+        return listOfCommands;
+    }
+
+    @Override
+    public List<String> getListOfPackagesInDevice() {
+        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
+        listOfCommands.add("pm list packages");
         return listOfCommands;
     }
 }
