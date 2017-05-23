@@ -11,12 +11,20 @@ import java.util.List;
  */
 public class Commands {
     private ArrayList<String> macCommands = new ArrayList<>();
+    private ArrayList<String> adbShell = new ArrayList<>();
 
     {
+        //Add Mac Commands
         macCommands.add("/bin/bash");
         macCommands.add("-l");
         macCommands.add("-c");
+
+        //Add adb shell
+        adbShell.add("adb");
+        adbShell.add("shell");
+
     }
+
 
     private String startAdbServer = "adb start-server";
 
@@ -37,9 +45,7 @@ public class Commands {
 
 
     public ArrayList<String> getDeleteDirectoryCommand() {
-        ArrayList<String> listOfCommands = new ArrayList<>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
+        ArrayList<String> listOfCommands = new ArrayList<>(adbShell);
         listOfCommands.add("rm -r " + basePath);
         return listOfCommands;
     }
@@ -66,52 +72,76 @@ public class Commands {
     public ArrayList<String> createDirInSdcard(String folderName) {
         System.out.println(getBasePath() + "/" + folderName);
 
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
+        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
         listOfCommands.add("mkdir " + getBasePath() + "/" + folderName);
         return listOfCommands;
     }
 
-    public String[][] getExtractionCommands(String packageName, String fileMapKey, String fileName) {
+    private String[] getTheChmod666Command(String packageName, String fileMapKey, String fileName) {
+        return new String[]{"adb", "shell",
+                "run-as " + packageName,
+                "chmod 666 " + fileMapKey + fileName};
+    }
+
+    private String[] getTheChmod600Command(String packageName, String fileMapKey, String fileName) {
+        return new String[]{"adb", "shell",
+                "run-as " + packageName,
+                "chmod 600 " + fileMapKey + fileName};
+    }
+
+
+    String[][] getExtractionCommands(String packageName, String fileMapKey, String fileName, boolean isRooted) {
+        return isRooted ? getRootCommands(packageName, fileMapKey, fileName) : getNonRootCommands(packageName, fileMapKey, fileName);
+    }
+
+    private String[][] getNonRootCommands(String packageName, String fileMapKey, String fileName) {
         return new String[][]{
-                {"adb", "shell",
-                        "run-as " + packageName,
-                        "chmod 666 " + fileMapKey + fileName},
+                getTheChmod666Command(packageName, fileMapKey, fileName),
                 {
                         "adb",
                         "shell",
                         "cp /data/data/" + packageName + "/" + fileMapKey +
                                 fileName + " " + getBasePath() +
                                 "/" + fileMapKey},
-                {"adb", "shell",
-                        "run-as " + packageName,
-                        "chmod 600 " + fileMapKey + fileName}};
+                getTheChmod600Command(packageName, fileMapKey, fileName)};
+    }
+
+    private String[][] getRootCommands(String packageName, String fileMapKey, String fileName) {
+        return new String[][]{
+                {
+                        "adb",
+                        "shell",
+                        "cp /data/data/" + packageName + "/" + fileMapKey +
+                                fileName + " " + getBasePath() +
+                                "/" + fileMapKey},
+        };
     }
 
     public List<String> getCreatePackDirInSdcard() {
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
+        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
         listOfCommands.add("mkdir " + getBasePath());
         return listOfCommands;
     }
 
-    public List<String> getListOfFilesForPackage(String packageName, String key) {
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
+    public List<String> getListOfFilesForPackage(String packageName, String key, boolean isRooted) {
+        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
         listOfCommands.add("run-as " + packageName);
         listOfCommands.add("ls " + key);
         return listOfCommands;
     }
 
-    public List<String> getMainDirPackage(String packageName) {
-        ArrayList<String> listOfCommands = new ArrayList<String>();
-        listOfCommands.add("adb");
-        listOfCommands.add("shell");
+    public List<String> getMainDirPackage(String packageName, boolean isRooted) {
+        ArrayList<String> listOfCommands = new ArrayList<String>(adbShell);
         listOfCommands.add("run-as " + packageName);
         listOfCommands.add("ls");
         return listOfCommands;
     }
+
+    public List<String> getCheckingRootCommand() {
+        List<String> listOfCOmmands = new ArrayList<>(adbShell);
+        listOfCOmmands.add("cd root");
+        return listOfCOmmands;
+    }
+
+
 }

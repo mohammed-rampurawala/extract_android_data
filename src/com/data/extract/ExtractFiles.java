@@ -16,33 +16,29 @@ public class ExtractFiles {
     private Commands commands;
     private HashMap<String, List<String>> mFileMap = new HashMap<String, List<String>>();
     private DirectoryOps mDirectoryOps = DirectoryOps.getInstance();
+    private boolean isDeviceRooted = false;
 
 
-    public ExtractFiles() {
-        commands = new Commands();
+    public ExtractFiles(boolean isDeviceRooted, Commands commands) {
+        this.commands = commands;
+        this.isDeviceRooted = isDeviceRooted;
     }
 
 
     public void startExtraction(String packageName) {
-
-
         try {
             commands.setPackageName(packageName);
             Runtime.getRuntime().exec(commands.getStartAdbServerCommand());
             this.mDirectoryOps.createExtractionDestDir(packageName);
 
-
             deleteProjectDirFromSD();
-
             createMainDirList(packageName);
             createSubDirectory(packageName);
             createProjectDirInSd();
             createFolderPaths();
             extractFiles(packageName);
             pullFiles();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -93,7 +89,7 @@ public class ExtractFiles {
             List<String> fileList = (List<String>) this.mFileMap.get(fileMapKey);
             for (String fileName : fileList) {
                 if (!fileName.contains("fabric")) {
-                    String[][] commandArray = commands.getExtractionCommands(packageName, fileMapKey, fileName);
+                    String[][] commandArray = commands.getExtractionCommands(packageName, fileMapKey, fileName, isDeviceRooted);
                     int j = (commandArray).length;
                     for (int i = 0; i < j; i++) {
                         String[] extractionCommands = commandArray[i];
@@ -116,10 +112,10 @@ public class ExtractFiles {
         String line;
         for (String key : keySet) {
             InputStream inputStream = ExecuteCommands.getInstance()
-                    .executeCommands(commands.getListOfFilesForPackage(packageName, key));
+                    .executeCommands(commands.getListOfFilesForPackage(packageName, key,isDeviceRooted));
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            List<String> list = (List<String>) this.mFileMap.get(key);
+            List<String> list = this.mFileMap.get(key);
 
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
@@ -139,7 +135,7 @@ public class ExtractFiles {
     private void createMainDirList(String packageName)
             throws IOException {
         InputStream executeCommands = ExecuteCommands.getInstance()
-                .executeCommands(commands.getMainDirPackage(packageName));
+                .executeCommands(commands.getMainDirPackage(packageName, isDeviceRooted));
         BufferedReader reader = new BufferedReader(new InputStreamReader(
                 executeCommands));
         String line;

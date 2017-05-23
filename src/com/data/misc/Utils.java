@@ -1,8 +1,8 @@
 package com.data.misc;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.data.extract.Commands;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +23,9 @@ public class Utils {
         return true;
     }
 
+
     public static void checkDeviceConnected() {
-        List<String> listOfCOmmands = new ArrayList();
+        List<String> listOfCOmmands = new ArrayList<>();
         listOfCOmmands.add("adb");
         listOfCOmmands.add(Constants.DEVICES);
 
@@ -48,6 +49,43 @@ public class Utils {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static String getDataFromStream(InputStream stream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        String line = "";
+        String data = "";
+        while ((line = reader.readLine()) != null) {
+            if (!line.isEmpty()) {
+                data += line;
+            }
+        }
+        try {
+            reader.close();
+            stream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+
+    private static boolean checkIsDeviceRooted(String isDeviceRooted) {
+        return !(isDeviceRooted != null && isDeviceRooted.toLowerCase().contains("denied"));
+    }
+
+    public static boolean checkIfDeviceIsRooted(Commands commands) {
+        try {
+            InputStream inputStream = ExecuteCommands.getInstance().executeCommands(commands.getCheckingRootCommand());
+            String input = Utils.getDataFromStream(inputStream);
+            boolean isRooted = checkIsDeviceRooted(input);
+            if (isRooted) {
+                System.out.println("Congratulations!!! your device is rooted...:) :)");
+            }
+            return isRooted;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
