@@ -1,5 +1,6 @@
 package com.data.extract;
 
+import com.data.commands.BaseCommands;
 import com.data.misc.ExecuteCommands;
 
 import java.io.*;
@@ -13,15 +14,31 @@ import java.util.Set;
  */
 public class ExtractFiles {
 
-    private Commands commands;
+    private BaseCommands commands;
     private HashMap<String, List<String>> mFileMap = new HashMap<String, List<String>>();
     private DirectoryOps mDirectoryOps = DirectoryOps.getInstance();
     private boolean isDeviceRooted = false;
 
 
-    public ExtractFiles(boolean isDeviceRooted, Commands commands) {
+    public ExtractFiles(boolean isDeviceRooted, BaseCommands commands) {
         this.commands = commands;
         this.isDeviceRooted = isDeviceRooted;
+
+//        if(isDeviceRooted){
+//            try {
+//               ProcessBuilder builder = new ProcessBuilder();
+//                ArrayList<String> commandsList = new ArrayList<>();
+//                commandsList.add("adb");
+//                commandsList.add("shell");
+//                commandsList.add("cp data/data/com.android.contacts/lib /sdcard/");
+//                Process start = builder.command(commandsList).start();
+//                System.out.println(Utils.getDataFromStream(start.getInputStream()));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+
     }
 
 
@@ -89,7 +106,7 @@ public class ExtractFiles {
             List<String> fileList = (List<String>) this.mFileMap.get(fileMapKey);
             for (String fileName : fileList) {
                 if (!fileName.contains("fabric")) {
-                    String[][] commandArray = commands.getExtractionCommands(packageName, fileMapKey, fileName, isDeviceRooted);
+                    String[][] commandArray = commands.getCommandToFetchDataToSdCard(packageName, fileMapKey, fileName);
                     int j = (commandArray).length;
                     for (int i = 0; i < j; i++) {
                         String[] extractionCommands = commandArray[i];

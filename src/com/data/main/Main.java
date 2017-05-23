@@ -1,6 +1,8 @@
 package com.data.main;
 
-import com.data.extract.Commands;
+import com.data.commands.BaseCommands;
+import com.data.commands.NonRootCommands;
+import com.data.commands.RootCommands;
 import com.data.extract.ExtractFiles;
 import com.data.misc.Utils;
 
@@ -9,14 +11,15 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Commands commands = new Commands();
+        BaseCommands commands;
 
         Utils.checkDeviceConnected();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Thanks for using...");
 
-        boolean isDeviceRooted = Utils.checkIfDeviceIsRooted(commands);
+        boolean isDeviceRooted = Utils.checkIfDeviceIsRooted();
+        commands = isDeviceRooted ? new RootCommands() : new NonRootCommands();
 
         System.out.println("Please enter package name");
         String packageName = scanner.nextLine();

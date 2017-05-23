@@ -1,8 +1,9 @@
 package com.data.misc;
 
-import com.data.extract.Commands;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,17 +76,25 @@ public class Utils {
         return !(isDeviceRooted != null && isDeviceRooted.toLowerCase().contains("denied"));
     }
 
-    public static boolean checkIfDeviceIsRooted(Commands commands) {
+    public static boolean checkIfDeviceIsRooted() {
         try {
-            InputStream inputStream = ExecuteCommands.getInstance().executeCommands(commands.getCheckingRootCommand());
+            InputStream inputStream = ExecuteCommands.getInstance().executeCommands(getCheckingRootCommand());
             String input = Utils.getDataFromStream(inputStream);
             boolean isRooted = checkIsDeviceRooted(input);
             if (isRooted) {
-                System.out.println("Congratulations!!! your device is rooted...:) :)");
+                System.out.println("Congratulations!!! your device is rooted...\nYou can extract any package data:) :)");
             }
             return isRooted;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static List<String> getCheckingRootCommand() {
+        List<String> listOfCOmmands = new ArrayList<>();
+        listOfCOmmands.add("adb");
+        listOfCOmmands.add("shell");
+        listOfCOmmands.add("cd root");
+        return listOfCOmmands;
     }
 }
