@@ -17,28 +17,14 @@ public class ExtractFiles {
     private BaseCommands commands;
     private HashMap<String, List<String>> mFileMap = new HashMap<String, List<String>>();
     private DirectoryOps mDirectoryOps = DirectoryOps.getInstance();
-    private boolean isDeviceRooted = false;
 
-
-    public ExtractFiles(boolean isDeviceRooted, BaseCommands commands) {
+    public ExtractFiles(BaseCommands commands) {
         this.commands = commands;
-        this.isDeviceRooted = isDeviceRooted;
-
-//        if(isDeviceRooted){
-//            try {
-//               ProcessBuilder builder = new ProcessBuilder();
-//                ArrayList<String> commandsList = new ArrayList<>();
-//                commandsList.add("adb");
-//                commandsList.add("shell");
-//                commandsList.add("cp data/data/com.android.contacts/lib /sdcard/");
-//                Process start = builder.command(commandsList).start();
-//                System.out.println(Utils.getDataFromStream(start.getInputStream()));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+    }
 
 
+    public void setExtractionPath(String path) {
+        mDirectoryOps.setExtractionPath(path);
     }
 
 
@@ -46,7 +32,7 @@ public class ExtractFiles {
         try {
             commands.setPackageName(packageName);
             Runtime.getRuntime().exec(commands.getStartAdbServerCommand());
-            this.mDirectoryOps.createExtractionDestDir(packageName);
+            mDirectoryOps.createExtractionDestDir(packageName);
 
             deleteProjectDirFromSD();
             createMainDirList(packageName);

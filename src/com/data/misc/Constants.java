@@ -5,4 +5,6 @@ package com.data.misc;
  */
 public class Constants {
     public static String DEVICES = "devices";
+    public static String PATH = "path:";
+    public static String PACKAGE_NAME = "pn:";
 }
