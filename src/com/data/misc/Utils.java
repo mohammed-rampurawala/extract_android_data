@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     start.getInputStream()));
             List<String> attachedDevices = new ArrayList<>();
+            reader.readLine();
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.length() > 0) {
@@ -48,7 +50,7 @@ public class Utils {
                 }
             }
             reader.close();
-            if (attachedDevices.size() < 2) {
+            if (attachedDevices.size() == 0) {
                 System.out.println("No devices attached");
                 System.exit(1);
             }
@@ -115,6 +117,15 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isValidPath(String path) {
+        try {
+            Paths.get(path);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     /**
