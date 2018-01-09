@@ -2,6 +2,7 @@ package com.data.commands;
 
 import com.data.misc.ExecuteCommands;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,14 +27,16 @@ public class NonRootCommands extends BaseCommands {
 
     @Override
     public String[][] getCommandToFetchDataToSdCard(String packageName, String fileMapKey, String fileName) {
+        String destPath = getBasePath()+ File.separator+fileMapKey;
+        //System.out.println(destPath);
         return new String[][]{
                 getTheChmod666Command(packageName, fileMapKey, fileName),
                 {
                         "adb",
                         "shell",
+                        "run-as " + packageName,
                         "cp /data/data/" + packageName + "/" + fileMapKey +
-                                fileName + " " + getBasePath() +
-                                "/" + fileMapKey},
+                                fileName + " " + destPath},
                 getTheChmod600Command(packageName, fileMapKey, fileName)};
     }
 

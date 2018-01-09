@@ -2,6 +2,7 @@ package com.data.extract;
 
 import com.data.commands.BaseCommands;
 import com.data.misc.ExecuteCommands;
+import com.data.misc.Utils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -110,8 +111,10 @@ public class ExtractFiles {
                     int j = (commandArray).length;
                     for (int i = 0; i < j; i++) {
                         String[] extractionCommands = commandArray[i];
-                        ExecuteCommands.getInstance().executeCommands(
+                        InputStream stream = ExecuteCommands.getInstance().executeCommands(
                                 extractionCommands);
+                        Utils.closeQuietly(stream);
+
                     }
                 }
             }
