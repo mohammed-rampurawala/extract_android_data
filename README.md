@@ -1,4 +1,4 @@
-# Extract My Android app data
+# Extract My Android App data
 
 Extract android data files from android data folder.
 It extracts all the files inside data folder of android application within package folder.
