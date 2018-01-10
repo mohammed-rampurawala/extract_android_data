@@ -27,8 +27,7 @@ public class NonRootCommands extends BaseCommands {
 
     @Override
     public String[][] getCommandToFetchDataToSdCard(String packageName, String fileMapKey, String fileName) {
-        String destPath = getBasePath()+ File.separator+fileMapKey;
-        //System.out.println(destPath);
+        String destPath = getBasePath() + "/" + fileMapKey;
         return new String[][]{
                 getTheChmod666Command(packageName, fileMapKey, fileName),
                 {
