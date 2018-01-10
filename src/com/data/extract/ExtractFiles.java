@@ -88,7 +88,9 @@ public class ExtractFiles {
 
     private void extractFiles(String packageName)
             throws IOException, InterruptedException {
+        System.out.println("");
         System.out.println("Please Wait... Extracting files...");
+        System.out.println("");
         Set<String> fileMapKeySet = this.mFileMap.keySet();
         for (String fileMapKey : fileMapKeySet) {
             List<String> fileList = (List<String>) this.mFileMap.get(fileMapKey);
