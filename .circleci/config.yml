@@ -23,7 +23,9 @@ jobs:
     steps:
       - checkout
       - run: gradle clean fatJar
-
+       - store_artifacts:
+          path: build/libs
+          destination: executable_jar
 
 #      # Download and cache dependencies
 #      - restore_cache:
