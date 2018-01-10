@@ -47,15 +47,21 @@ public abstract class BaseCommands {
     public ArrayList<String> getPullFileCommand(String fileMapKey, String fileName, String outputPath) {
         boolean isMac = Utils.isMac();
         ArrayList<String> listOfCommands = new ArrayList<>();
-        if (isMac) listOfCommands.addAll(macCommands);
-        listOfCommands.add("adb");
-        listOfCommands.add("pull");
-        String inputFile = getBasePath() + "/" + fileMapKey + fileName;
+
         //Input file name path
-        listOfCommands.add(inputFile);
-        String outputFile = "\"" + outputPath + File.separator + fileMapKey + "\"";
+        String inputFile = getBasePath() + "/" + fileMapKey + fileName;
         //Output file name path
-        listOfCommands.add(outputFile);
+        String outputFile = "\"" + outputPath + File.separator + fileMapKey + "\"";
+
+        if (isMac) {
+            listOfCommands.addAll(macCommands);
+            listOfCommands.add("adb pull " + inputFile + " " + outputFile);
+        } else {
+            listOfCommands.add("adb");
+            listOfCommands.add("pull");
+            listOfCommands.add(inputFile);
+            listOfCommands.add(outputFile);
+        }
         System.out.println("Input:->" + inputFile);
         System.out.println("Output:->" + outputFile);
         System.out

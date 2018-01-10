@@ -2,6 +2,7 @@ package com.data.extract;
 
 import com.data.commands.BaseCommands;
 import com.data.misc.ExecuteCommands;
+import com.data.misc.Utils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,28 +18,14 @@ public class ExtractFiles {
     private BaseCommands commands;
     private HashMap<String, List<String>> mFileMap = new HashMap<String, List<String>>();
     private DirectoryOps mDirectoryOps = DirectoryOps.getInstance();
-    private boolean isDeviceRooted = false;
 
-
-    public ExtractFiles(boolean isDeviceRooted, BaseCommands commands) {
+    public ExtractFiles(BaseCommands commands) {
         this.commands = commands;
-        this.isDeviceRooted = isDeviceRooted;
-
-//        if(isDeviceRooted){
-//            try {
-//               ProcessBuilder builder = new ProcessBuilder();
-//                ArrayList<String> commandsList = new ArrayList<>();
-//                commandsList.add("adb");
-//                commandsList.add("shell");
-//                commandsList.add("cp data/data/com.android.contacts/lib /sdcard/");
-//                Process start = builder.command(commandsList).start();
-//                System.out.println(Utils.getDataFromStream(start.getInputStream()));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+    }
 
 
+    public void setExtractionPath(String path) {
+        mDirectoryOps.setExtractionPath(path);
     }
 
 
@@ -46,7 +33,7 @@ public class ExtractFiles {
         try {
             commands.setPackageName(packageName);
             Runtime.getRuntime().exec(commands.getStartAdbServerCommand());
-            this.mDirectoryOps.createExtractionDestDir(packageName);
+            mDirectoryOps.createExtractionDestDir(packageName);
 
             deleteProjectDirFromSD();
             createMainDirList(packageName);
@@ -101,6 +88,9 @@ public class ExtractFiles {
 
     private void extractFiles(String packageName)
             throws IOException, InterruptedException {
+        System.out.println("");
+        System.out.println("Please Wait... Extracting files...");
+        System.out.println("");
         Set<String> fileMapKeySet = this.mFileMap.keySet();
         for (String fileMapKey : fileMapKeySet) {
             List<String> fileList = (List<String>) this.mFileMap.get(fileMapKey);
@@ -110,8 +100,9 @@ public class ExtractFiles {
                     int j = (commandArray).length;
                     for (int i = 0; i < j; i++) {
                         String[] extractionCommands = commandArray[i];
-                        ExecuteCommands.getInstance().executeCommands(
+                        InputStream stream = ExecuteCommands.getInstance().executeCommands(
                                 extractionCommands);
+                        Utils.closeQuietly(stream);
                     }
                 }
             }

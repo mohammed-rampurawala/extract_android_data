@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     start.getInputStream()));
             List<String> attachedDevices = new ArrayList<>();
+            reader.readLine();
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.length() > 0) {
@@ -48,7 +50,7 @@ public class Utils {
                 }
             }
             reader.close();
-            if (attachedDevices.size() < 2) {
+            if (attachedDevices.size() == 0) {
                 System.out.println("No devices attached");
                 System.exit(1);
             }
@@ -78,7 +80,7 @@ public class Utils {
 
 
     private static boolean checkIsDeviceRooted(String isDeviceRooted) {
-        return !(isDeviceRooted != null && isDeviceRooted.toLowerCase().contains("denied"));
+        return !(isDeviceRooted != null && (isDeviceRooted.length()==0 || isDeviceRooted.toLowerCase().contains("denied")));
     }
 
     public static boolean checkIfDeviceIsRooted() {
@@ -114,6 +116,33 @@ public class Utils {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static boolean isValidPath(String path) {
+        try {
+            Paths.get(path);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Unconditionally close an <code>InputStream</code>.
+     * <p>
+     * Equivalent to {@link InputStream#close()}, except any exceptions will be ignored.
+     * This is typically used in finally blocks.
+     *
+     * @param input  the InputStream to close, may be null or already closed
+     */
+    public static void closeQuietly(InputStream input) {
+        try {
+            if (input != null) {
+                input.close();
+            }
+        } catch (IOException ioe) {
+            // ignore
         }
     }
 }
