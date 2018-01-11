@@ -17,9 +17,9 @@ Code has been updated, need to update the JAR in the download link.
 
 #### Note
 Everytime files are extracted it will be stored in sdcard and older files will be renewed but on Desktop/Finder new directory will be created.
+
 To view encrypted db using the sqlcipher. You can use [sqlitebrowser](www.sqlitebrowser.org) you need to have the PassPhrase which was used to encrypt sqlite database.
 
-Download executable file from [Android Extract Data](https://goo.gl/eqTVfm)
 
 ### License
 ```
