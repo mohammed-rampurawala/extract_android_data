@@ -80,7 +80,7 @@ public class Utils {
 
 
     private static boolean checkIsDeviceRooted(String isDeviceRooted) {
-        return !(isDeviceRooted != null && (isDeviceRooted.length()==0 || isDeviceRooted.toLowerCase().contains("denied")));
+        return !(isDeviceRooted != null && (isDeviceRooted.length() == 0 || isDeviceRooted.toLowerCase().contains("denied")));
     }
 
     public static boolean checkIfDeviceIsRooted() {
@@ -134,7 +134,7 @@ public class Utils {
      * Equivalent to {@link InputStream#close()}, except any exceptions will be ignored.
      * This is typically used in finally blocks.
      *
-     * @param input  the InputStream to close, may be null or already closed
+     * @param input the InputStream to close, may be null or already closed
      */
     public static void closeQuietly(InputStream input) {
         try {
@@ -144,5 +144,19 @@ public class Utils {
         } catch (IOException ioe) {
             // ignore
         }
+    }
+
+    private static String OS = System.getProperty("os.name").toLowerCase();
+
+    public static boolean isWindows() {
+        return (OS.indexOf("win") >= 0);
+    }
+
+    public static boolean isMac() {
+        return (OS.indexOf("mac") >= 0);
+    }
+
+    public static boolean isUnix() {
+        return (OS.indexOf("nux") >= 0);
     }
 }
