@@ -2,7 +2,7 @@
 
 Extract android data files from android data folder.
 It extracts all the files inside data folder of android application within package folder.
-You dont need android device to be rooted but it only works for debuggable application and not with release builds.
+You don't need android device to be rooted but it only works for debuggable application and not with release builds.
 Tested with Sony, Nexus and sometimes face problem with Samsung Manufactured android devices.
 
 ## How it works:
@@ -17,6 +17,7 @@ Code has been updated, need to update the JAR in the download link.
 
 #### Note
 Everytime files are extracted it will be stored in sdcard and older files will be renewed but on Desktop/Finder new directory will be created.
+To view encrypted db using the sqlcipher. You can use [sqlitebrowser](www.sqlitebrowser.org) you need to have the PassPhrase which was used to encrypt sqlite database.
 
 Download executable file from [Android Extract Data](https://goo.gl/eqTVfm)
 
