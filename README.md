@@ -5,7 +5,8 @@ It extracts all the files inside data folder of android application within packa
 You don't need android device to be rooted but it only works for debuggable application and not with release builds.
 Tested with Sony, Nexus and sometimes face problem with Samsung Manufactured android devices.
 
-## Download Binary from [Extract Android Data](https://github.com/mohammed-rampurawala/extract_android_data/releases)
+## Download 
+You can download binary from [Extract Android Data](https://github.com/mohammed-rampurawala/extract_android_data/releases)
 
 ## How it works:
 1. It asks you to enter package name.
